@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\backend",
+    "\\backend\\env",
+    "\\backend\\env\\Lib",
+    "\\backend\\env\\Lib\\site-packages",
+    "\\backend\\env\\Lib\\site-packages\\psycopg2",
+    "\\backend\\flaskr",
+    "\\frontend",
+    "\\frontend\\src",
+    "\\frontend\\src\\components"
+  ],
+  "SelectedNode": "\\frontend\\src\\components\\Question.js",
+  "PreviewInSolutionExplorer": false
+}
