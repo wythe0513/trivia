@@ -8,13 +8,13 @@ from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
 
-def paginate_questions(request, questions_list):
+def paginate_questions(request, selection):
     page = request.args.get('page', 1, type=int)
     start = (page - 1) * QUESTIONS_PER_PAGE
     end = start + QUESTIONS_PER_PAGE
 
-    paginated_questions = questions[start:end]
-    return paginated_questions
+    questions = [question.format() for question in selection]
+    current_questions = questions[start:end]
 
     return current_questions
 
@@ -26,11 +26,6 @@ def create_app(test_config=None):
   # @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
   CORS(app)
 
-  @app.route('/')
-  def index():
-      return "Welcome to Trivia API"
-
-
   # @TODO: Use the after_request decorator to set Access-Control-Allow
   @app.after_request
   def handle_response(response):
@@ -38,35 +33,50 @@ def create_app(test_config=None):
         header['Access-Control-Allow-Origin'] = '*'
         return response
 
+  @app.route('/')
+  def index():
+      return "Welcome to Trivia API"
+
   #@TODO:Create an endpoint to handle GET requests for all available categories.
   @app.route("/categories")
-  def get_category_list():
-    categories = {}
-    for category in Category.query.all():
-        categories[category.id] = category.type
-    return categories
+  def retrieve_categories():
+        categories = Category.query.order_by(Category.type).all()
+
+        if len(categories) == 0:
+            abort(404)
+
+        return jsonify({
+            'success': True,
+            'categories': {category.id: category.type for category in categories}
+        })
 
   #@TODO: 
   #Create an endpoint to handle GET requests for questions, 
   #including pagination (every 10 questions). 
   #This endpoint should return a list of questions, 
   #number of total questions, current category, categories. 
+  
   #TEST: At this point, when you start the application
   #you should see questions and categories generated,
   #ten questions per page and pagination at the bottom of the screen for three pages.
   #Clicking on the page numbers should update the questions. 
   
-  app.route('/questions', methods=['GET'])
-  def get_questions():
-        questions_list = Question.query.all()
-        paginated_questions = paginate_questions(request, questions_list)
-        if len(paginated_questions) == 0:
+  @app.route('/questions')
+  def retrieve_questions():
+        selection = Question.query.order_by(Question.id).all()
+        current_questions = paginate_questions(request, selection)
+
+        categories = Category.query.order_by(Category.type).all()
+
+        if len(current_questions) == 0:
             abort(404)
+
         return jsonify({
             'success': True,
-            'questions': paginated_questions,
-            'total_questions': len(questions_list),
-            'categories': get_category_list()
+            'questions': current_questions,
+            'total_questions': len(selection),
+            'categories': {category.id: category.type for category in categories},
+            'current_category': None
         })
 
   #@TODO: 
