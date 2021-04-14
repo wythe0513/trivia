@@ -2,13 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\backend",
-    "\\backend\\env\\Lib",
-    "\\backend\\env\\Lib\\site-packages\\psycopg2",
     "\\backend\\flaskr",
-    "\\frontend",
-    "\\frontend\\env",
-    "\\frontend\\env\\Include",
-    "\\frontend\\src"
+    "\\frontend"
   ],
+  "SelectedNode": "\\backend\\flaskr\\__init__.py",
   "PreviewInSolutionExplorer": false
 }
